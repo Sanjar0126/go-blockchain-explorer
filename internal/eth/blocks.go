@@ -6,8 +6,8 @@ import (
 	"math/big"
 )
 
-func GetLatestBlocks(count int) ([]models.BlockResponse, error) {
-	var blocks []models.BlockResponse
+func GetLatestBlocks(count int) ([]*models.BlockResponse, error) {
+	var blocks []*models.BlockResponse
 	header, err := client.HeaderByNumber(context.Background(), nil)
 	if err != nil {
 		return nil, err
@@ -20,12 +20,25 @@ func GetLatestBlocks(count int) ([]models.BlockResponse, error) {
 			return nil, err
 		}
 
-		blocks = append(blocks, models.BlockResponse{
-			Number:     block.NumberU64(),
-			Hash:       block.Hash().Hex(),
-			ParentHash: block.ParentHash().Hex(),
-			Time:       block.Time(),
-			TxCount:    len(block.Transactions()),
+		blocks = append(blocks, &models.BlockResponse{
+			Number:       block.NumberU64(),
+			Hash:         block.Hash().Hex(),
+			ParentHash:   block.ParentHash().Hex(),
+			Timestamp:    block.Time(),
+			Transactions: len(block.Transactions()),
+			Miner:        block.Coinbase().Hex(),
+			GasUsed:      block.GasUsed(),
+			GasLimit:     block.GasLimit(),
+			Size:         uint64(block.Size()),
+
+			Difficulty:      block.Difficulty().String(),
+			TotalDifficulty: block.Difficulty().String(),
+			BaseFeePerGas: func() string {
+				if block.BaseFee() != nil {
+					return block.BaseFee().String()
+				}
+				return ""
+			}(),
 		})
 
 		current = new(big.Int).Sub(current, big.NewInt(1))
@@ -46,11 +59,24 @@ func GetBlockByNumber(num string) (*models.BlockResponse, error) {
 	}
 
 	resp := &models.BlockResponse{
-		Number:     block.NumberU64(),
-		Hash:       block.Hash().Hex(),
-		ParentHash: block.ParentHash().Hex(),
-		Time:       block.Time(),
-		TxCount:    len(block.Transactions()),
+		Number:       block.NumberU64(),
+		Hash:         block.Hash().Hex(),
+		ParentHash:   block.ParentHash().Hex(),
+		Timestamp:    block.Time(),
+		Transactions: len(block.Transactions()),
+		Miner:        block.Coinbase().Hex(),
+		GasUsed:      block.GasUsed(),
+		GasLimit:     block.GasLimit(),
+		Size:         uint64(block.Size()),
+
+		Difficulty:      block.Difficulty().String(),
+		TotalDifficulty: block.Difficulty().String(),
+		BaseFeePerGas: func() string {
+			if block.BaseFee() != nil {
+				return block.BaseFee().String()
+			}
+			return ""
+		}(),
 	}
 
 	return resp, err
