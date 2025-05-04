@@ -1,0 +1,36 @@
+# Binaries for programs and plugins
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Build directories
+/build/
+bin/
+vendor/
+
+# Go workspace file
+go.work
+
+# Dependency directories
+Godeps/
+
+# IDE/editor specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+*.old
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+.vscode
